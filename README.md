@@ -1,10 +1,10 @@
 ## Pyhell-Task-SparkCTF-2024
 This repo will cover the writeup for the pyjail task hosted at SparkCTF 2024
 # Description
-This task focused on establishing a Python environment that restricts the built-in functions accessible to the user and employs a blacklist to prohibit specific keywords and characters, which could otherwise be exploited to circumvent these limitations.
+This task focused on breaking a Python environment that restricts the built-in functions accessible to the user and employs a blacklist to prohibit specific keywords and characters, which could otherwise be exploited to circumvent these limitations.
 
 #### Files: jail.py
-```
+```python
 import re
 import builtins
 import sys
@@ -60,3 +60,10 @@ def jail():
 if __name__ == "__main__":
     jail()
 ```
+### Payload-example :
+ ```python
+().__class__.__class__.__subclasses__(().__class__.__class__)[0].register.__builtins__["breakpoint"]()
+```
+
+This payload navigates Python's internal structures to reference the original __builtins__ module not the restricted version provided in the script.
+But first we need to find replacements for `_ [ ] .` and other words like `class register builtins breakpoint`
