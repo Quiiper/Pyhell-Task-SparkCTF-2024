@@ -86,4 +86,4 @@ After using the breakpoint() function and starting the debugger we can just open
 print(__import__('builtins').open('flag.txt', 'r').read())                                                                                                                                                                            
 ```
 We need to import the builtins once again since open is not defined ( sorry not sorry) 
-and there we go we have our flag : `SparkCTF{PYJ41L_15_N0_FUN}`
+and there we go we have our flag : `SparkCTF{PYJ41L_15_N0_FUN}`.
